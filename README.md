@@ -18,7 +18,7 @@ savePixels(x, "png").pipe(process.stdout)
 
 This writes the following image to stdout:
 
-
+<img src=https://raw.github.com/mikolalysenko/save-pixels/master/example/example.png>
 
 Install
 =======
