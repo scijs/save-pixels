@@ -16,7 +16,7 @@ x.set(16, 16, 255)
 savePixels(x, "png").pipe(process.stdout)
 ```
 
-This writes the following image to stdout:
+This writes the foll owing image to stdout:
 
 <img src=https://raw.github.com/mikolalysenko/save-pixels/master/example/example.png>
 
@@ -24,7 +24,7 @@ Install
 =======
 
     npm install save-pixels
-    
+
 ### `require("save-pixels")(array, type)`
 Saves an ndarray as an image with the given format
 
