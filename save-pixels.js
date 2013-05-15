@@ -12,8 +12,8 @@ function handlePNG(array) {
   var i, j, ptr = 0, c
   if(array.shape.length === 3) {
     if(array.shape[2] === 3) {
-      for(i=0; i<array.shape[0]; ++i) {
-        for(j=0; j<array.shape[1]; ++j) {
+      for(j=0; j<array.shape[1]; ++j) {
+        for(i=0; i<array.shape[0]; ++i) {
           png.data[ptr++] = array.get(i,j,0)
           png.data[ptr++] = array.get(i,j,1)
           png.data[ptr++] = array.get(i,j,2)
@@ -21,8 +21,8 @@ function handlePNG(array) {
         }
       }
     } else if(array.shape[2] === 4) {
-      for(i=0; i<array.shape[0]; ++i) {
-        for(j=0; j<array.shape[1]; ++j) {
+      for(j=0; j<array.shape[1]; ++j) {
+        for(i=0; i<array.shape[0]; ++i) {
           png.data[ptr++] = array.get(i,j,0)
           png.data[ptr++] = array.get(i,j,1)
           png.data[ptr++] = array.get(i,j,2)
@@ -30,8 +30,8 @@ function handlePNG(array) {
         }
       }
     } else if(array.shape[3] === 1) {
-      for(i=0; i<array.shape[0]; ++i) {
-        for(j=0; j<array.shape[1]; ++j) {
+      for(j=0; j<array.shape[1]; ++j) {
+        for(i=0; i<array.shape[0]; ++i) {
           var c = array.get(i,j,0)
           png.data[ptr++] = c
           png.data[ptr++] = c
@@ -45,8 +45,8 @@ function handlePNG(array) {
       return result
     }
   } else if(array.shape.length === 2) {
-    for(i=0; i<array.shape[0]; ++i) {
-      for(j=0; j<array.shape[1]; ++j) {
+    for(j=0; j<array.shape[1]; ++j) {
+      for(i=0; i<array.shape[0]; ++i) {
         var c = array.get(i,j,0)
         png.data[ptr++] = c
         png.data[ptr++] = c
