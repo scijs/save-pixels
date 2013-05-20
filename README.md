@@ -28,7 +28,7 @@ Install
 ### `require("save-pixels")(array, type)`
 Saves an ndarray as an image with the given format
 
-* `array` is an `ndarray` of pixels
+* `array` is an `ndarray` of pixels.  Assumes that shape is `[rows, columns, channels]`
 * `type` is the type of the image to save.  Currently supported formats:
 
   + `"png"` - Portable Network Graphics format
