@@ -45,8 +45,8 @@ function handlePNG(array) {
       return result
     }
   } else if(array.shape.length === 2) {
-    for(j=0; j<array.shape[1]; ++j) {
-      for(i=0; i<array.shape[0]; ++i) {
+    for(i=0; i<array.shape[0]; ++i) {
+      for(j=0; j<array.shape[1]; ++j) {
         var c = array.get(i,j,0)
         png.data[ptr++] = c
         png.data[ptr++] = c

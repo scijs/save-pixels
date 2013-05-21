@@ -6,4 +6,4 @@ var x = ndarray.zeros([32, 32], "uint8")
 x.set(16, 16, 255)
 
 //Save to a file
-savePixels(x, "png").pipe(process.stdout)
+savePixels(x.pick(-1, -1, 0), "png").pipe(process.stdout)
