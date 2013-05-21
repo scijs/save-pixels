@@ -1,6 +1,6 @@
 {
   "name": "save-pixels",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Saves an ndarray as an image to a file",
   "main": "save-pixels.js",
   "directories": {
@@ -13,11 +13,11 @@
     "through": "~2.3.4"
   },
   "devDependencies": {
-    "tap": "tap test/*.js",
-    "get-pixels": "~0.1.0"
+    "get-pixels": "~0.1.0",
+    "tap": "~0.4.3"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tap test/*.js"
   },
   "repository": {
     "type": "git",
