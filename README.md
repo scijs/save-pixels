@@ -5,11 +5,11 @@ Saves an ndarray to an image.
 Example
 =======
 ```javascript
-var ndarray = require("ndarray")
+var zeros = require("zeros")
 var savePixels = require("save-pixels")
 
 //Create an image
-var x = ndarray.zeros([32, 32], "uint8")
+var x = zeros([32, 32])
 x.set(16, 16, 255)
 
 //Save to a file
