@@ -1,5 +1,6 @@
 "use strict"
 
+var zeros = require("zeros")
 var ndarray = require("ndarray")
 var savePixels = require("../save-pixels.js")
 var getPixels = require("get-pixels")
@@ -54,16 +55,15 @@ function testArray(t, array, format, cb) {
 
 require("tap").test("save-pixels", function(t) {
 
-  var x = ndarray.zeros([64, 64])
+  var x = zeros([64, 64])
   
   for(var i=0; i<64; ++i) {
     for(var j=0; j<64; ++j) {
       x.set(i, j, i+2*j)
     }
   }
-  
   testArray(t, x, "png", function() {
-    var x = ndarray.zeros([64, 64, 3])
+    var x = zeros([64, 64, 3])
     for(var i=0; i<64; ++i) {
       for(var j=0; j<64; ++j) {
         x.set(i, j, 0, i)

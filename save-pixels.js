@@ -1,6 +1,5 @@
 "use strict"
 
-var ndarray = require("ndarray")
 var PNG = require("pngjs").PNG
 var through = require("through")
 
