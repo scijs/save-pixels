@@ -32,6 +32,7 @@ Saves an ndarray as an image with the given format
 * `type` is the type of the image to save.  Currently supported formats:
 
   + `"png"` - Portable Network Graphics format
+  + `"canvas"` - A canvas element
 
 
 **Returns** A stream that you can pipe to serialize the result.
