@@ -1,6 +1,6 @@
 {
   "name": "save-pixels",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Saves an ndarray as an image to a file",
   "main": "save-pixels.js",
   "directories": {
