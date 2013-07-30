@@ -40,7 +40,7 @@ function handlePNG(array) {
       }
     } else {
       var result = through()
-      result.emit("error", new Error("Incomptabile array shape"))
+      result.emit("error", new Error("Incompatible array shape"))
       return result
     }
   } else if(array.shape.length === 2) {
@@ -55,7 +55,7 @@ function handlePNG(array) {
     }
   } else {
     var result = through()
-    result.emit("error", new Error("Incomptabile array shape"))
+    result.emit("error", new Error("Incompatible array shape"))
     return result
   }
   return png.pack()
