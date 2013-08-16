@@ -60,6 +60,15 @@ function haderror(err) {
 }
 
 module.exports = function savePixels(array, type) {
+  var canvas, context
+  if (type instanceof CanvasRenderingContext2D) {
+    canvas = type.canvas
+    context = type
+    type = 'CANVAS'
+  } else if (type instanceof HTMLCanvasElement) {
+    canvas = type
+    type = 'CANVAS'
+  }
   switch(type.toUpperCase()) {
     case "PNG":
     case ".PNG":
@@ -73,8 +82,8 @@ module.exports = function savePixels(array, type) {
       return png.pack()
 
     case "CANVAS":
-      var canvas = document.createElement("canvas")
-      var context = canvas.getContext("2d")
+      canvas = canvas || document.createElement("canvas")
+      context = context || canvas.getContext("2d")
       canvas.width = array.shape[1]
       canvas.height = array.shape[0]
       var imageData = context.getImageData(0, 0, canvas.width, canvas.height)
