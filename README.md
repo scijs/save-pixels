@@ -29,7 +29,7 @@ Install
 Saves an ndarray as an image with the given format
 
 * `array` is an `ndarray` of pixels.  Assumes that shape is `[rows, columns, channels]`
-* `type` is the type of the image to save.  Currently supported formats:
+* `type` is the type of the image to save or a canvas element or 2d rendering context.  Currently supported formats:
 
   + `"png"` - Portable Network Graphics format
   + `"canvas"` - A canvas element
