@@ -12,8 +12,8 @@
     "through": "^2.3.4"
   },
   "devDependencies": {
+    "get-pixels": "~3.0.1",
     "ndarray": "~1.0.0",
-    "get-pixels": "~1.0.1",
     "tap": "~0.4.3",
     "zeros": "0.0.0"
   },
