@@ -5,16 +5,56 @@ var ndarray = require("ndarray")
 var savePixels = require("../save-pixels.js")
 var getPixels = require("get-pixels")
 var fs = require("fs")
+var tap = require("tap")
 
-function testArray(t, array, format, cb) {
+function writePixels(t, array, format, cb) {
   var out = fs.createWriteStream("temp." + format)
   var pxstream = savePixels(array, format)
   pxstream.pipe(out)
-  .on("error", function(err) {
-    t.assert(false, err)
-    cb()
+  .on("error", cb)
+  .on("close", cb)
+}
+
+function compareImages(t, array, format, cb) {
+  writePixels(t, array, format, function(err) {
+    if (err) {
+      t.assert(false, err)
+      cb()
+      return
+    }
+
+    getPixels("temp." + format, function(err, actualPixels) {
+      if(err) {
+        t.assert(false, err)
+        cb()
+        return
+      }
+
+      getPixels("expected." + format, function(err, expectedPixels) {
+        if(err) {
+          t.assert(false, err)
+          cb()
+          return
+        }
+
+        t.deepEqual(actualPixels, expectedPixels)
+        if (!process.env.TEST_DEBUG) {
+          fs.unlinkSync("temp." + format)
+        }
+        cb()
+      })
+    })
   })
-  .on("close", function() {
+}
+
+function testArray(t, array, format, cb) {
+  writePixels(t, array, format, function(err) {
+    if (err) {
+      t.assert(false, err)
+      cb()
+      return
+    }
+
     process.nextTick(function() {
       getPixels("temp." + format, function(err, data) {
         if(err) {
@@ -53,8 +93,7 @@ function testArray(t, array, format, cb) {
 }
 
 
-require("tap").test("save-pixels", function(t) {
-
+tap.test("save-pixels saving a monoscale png", function(t) {
   var x = zeros([64, 64])
   
   for(var i=0; i<64; ++i) {
@@ -63,16 +102,36 @@ require("tap").test("save-pixels", function(t) {
     }
   }
   testArray(t, x, "png", function() {
-    var x = zeros([64, 64, 3])
-    for(var i=0; i<64; ++i) {
-      for(var j=0; j<64; ++j) {
-        x.set(i, j, 0, i)
-        x.set(i, j, 0, j)
-        x.set(i, j, 0, i+2*j)
-      }
+    t.end()
+  })
+})
+
+tap.test("save-pixels saving a RGB png", function(t) {
+  var x = zeros([64, 64, 3])
+  
+  for(var i=0; i<64; ++i) {
+    for(var j=0; j<64; ++j) {
+      x.set(i, j, 0, i)
+      x.set(i, j, 0, j)
+      x.set(i, j, 0, i+2*j)
     }
-    testArray(t, x, "png", function() {
-      t.end()
-    })
+  }
+  testArray(t, x, "png", function() {
+    t.end()
+  })
+})
+
+tap.test("save-pixels saving a RGB jpeg", function(t) {
+  var x = zeros([64, 64, 3])
+  
+  for(var i=0; i<64; ++i) {
+    for(var j=0; j<64; ++j) {
+      x.set(i, j, 0, i)
+      x.set(i, j, 0, j)
+      x.set(i, j, 0, i+2*j)
+    }
+  }
+  compareImages(t, x, "jpeg", function() {
+    t.end()
   })
 })

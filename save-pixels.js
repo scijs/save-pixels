@@ -1,5 +1,7 @@
 "use strict"
 
+var ContentStream = require("contentstream")
+var jpegJs = require("jpeg-js")
 var PNG = require("pngjs").PNG
 var through = require("through")
 
@@ -61,6 +63,22 @@ function haderror(err) {
 
 module.exports = function savePixels(array, type) {
   switch(type.toUpperCase()) {
+    case "JPG":
+    case ".JPG":
+    case "JPEG":
+    case ".JPEG":
+      var width = array.shape[0]
+      var height = array.shape[1]
+      var data = new Buffer(width * height * 4)
+      data = handleData(array, data)
+      var rawImageData = {
+        data: data,
+        width: width,
+        height: height
+      }
+      var jpegImageData = jpegJs.encode(rawImageData)
+      return new ContentStream(jpegImageData.data)
+
     case "PNG":
     case ".PNG":
       var png = new PNG({
