@@ -12,10 +12,10 @@
     "through": "^2.3.4"
   },
   "devDependencies": {
-    "get-pixels": "~3.0.1",
-    "ndarray": "~1.0.0",
-    "tap": "~0.4.3",
-    "zeros": "0.0.0"
+    "get-pixels": "^3.0.1",
+    "ndarray": "^1.0.0",
+    "ndarray-scratch": "^1.1.1",
+    "tape": "^3.0.1"
   },
   "scripts": {
     "test": "tap test/*.js"

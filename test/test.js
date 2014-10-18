@@ -1,6 +1,6 @@
 "use strict"
 
-var zeros = require("zeros")
+var zeros = require("ndarray-scratch").zeros
 var ndarray = require("ndarray")
 var savePixels = require("../save-pixels.js")
 var getPixels = require("get-pixels")
@@ -53,7 +53,7 @@ function testArray(t, array, format, cb) {
 }
 
 
-require("tap").test("save-pixels", function(t) {
+require("tape")("save-pixels", function(t) {
 
   var x = zeros([64, 64])
   
@@ -67,8 +67,8 @@ require("tap").test("save-pixels", function(t) {
     for(var i=0; i<64; ++i) {
       for(var j=0; j<64; ++j) {
         x.set(i, j, 0, i)
-        x.set(i, j, 0, j)
-        x.set(i, j, 0, i+2*j)
+        x.set(i, j, 1, j)
+        x.set(i, j, 2, i+2*j)
       }
     }
     testArray(t, x, "png", function() {
