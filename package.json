@@ -8,6 +8,8 @@
     "test": "test"
   },
   "dependencies": {
+    "contentstream": "~1.0.0",
+    "jpeg-js": "0.0.4",
     "pngjs": "~0.4.0-alpha",
     "through": "^2.3.4"
   },
