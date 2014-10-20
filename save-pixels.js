@@ -1,13 +1,23 @@
 "use strict"
 
 var ContentStream = require("contentstream")
+var GifEncoder = require("gif-encoder")
 var jpegJs = require("jpeg-js")
 var PNG = require("pngjs").PNG
 var through = require("through")
 
-function handleData(array, data) {
+function handleData(array, data, frame) {
   var i, j, ptr = 0, c
-  if(array.shape.length === 3) {
+  if(array.shape.length === 4) {
+    for(j=0; j<array.shape[2]; ++j) {
+      for(i=0; i<array.shape[1]; ++i) {
+        data[ptr++] = array.get(frame,i,j,0)>>>0
+        data[ptr++] = array.get(frame,i,j,1)>>>0
+        data[ptr++] = array.get(frame,i,j,2)>>>0
+        data[ptr++] = array.get(frame,i,j,3)>>>0
+      }
+    }
+  } else if(array.shape.length === 3) {
     if(array.shape[2] === 3) {
       for(j=0; j<array.shape[1]; ++j) {
         for(i=0; i<array.shape[0]; ++i) {
@@ -80,6 +90,21 @@ module.exports = function savePixels(array, type) {
       }
       var jpegImageData = jpegJs.encode(rawImageData)
       return new ContentStream(jpegImageData.data)
+
+    case "GIF":
+    case ".GIF":
+      var frames = array.shape.length === 4 ? array.shape[0] : 1
+      var width = array.shape.length === 4 ? array.shape[1] : array.shape[0]
+      var height = array.shape.length === 4 ? array.shape[2] : array.shape[1]
+      var data = new Buffer(width * height * 4)
+      var gif = new GifEncoder(width, height)
+      gif.writeHeader()
+      for (var i = 0; i < frames; i++) {
+        data = handleData(array, data, i)
+        gif.addFrame(data)
+      }
+      gif.finish()
+      return gif
 
     case "PNG":
     case ".PNG":
