@@ -3,7 +3,7 @@
 var ContentStream = require("contentstream")
 var GifEncoder = require("gif-encoder")
 var jpegJs = require("jpeg-js")
-var PNG = require("pngjs").PNG
+var PNG = require("pngjs2").PNG
 var through = require("through")
 
 function handleData(array, data, frame) {

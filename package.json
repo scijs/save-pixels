@@ -11,7 +11,7 @@
     "contentstream": "^1.0.0",
     "gif-encoder": "~0.4.1",
     "jpeg-js": "0.0.4",
-    "pngjs": "~0.4.0-alpha",
+    "pngjs2": "^1.2.0",
     "through": "^2.3.4"
   },
   "devDependencies": {
