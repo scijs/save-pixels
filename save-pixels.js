@@ -3,7 +3,7 @@
 var ContentStream = require("contentstream")
 var GifEncoder = require("gif-encoder")
 var jpegJs = require("jpeg-js")
-var PNG = require("pngjs2").PNG
+var PNG = require("pngjs").PNG
 var through = require("through")
 
 function handleData(array, data, frame) {
@@ -128,7 +128,7 @@ module.exports = function savePixels(array, type) {
       if (typeof data === "Error") return haderror(data)
       context.putImageData(imageData, 0, 0)
       return canvas
-    
+
     default:
       return haderror(new Error("Unsupported file type: " + type))
   }
