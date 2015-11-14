@@ -31,6 +31,8 @@ Saves an ndarray as an image with the given format
 * `array` is an `ndarray` of pixels.  Assumes that shape is `[width, height, channels]`
 * `type` is the type of the image to save.  Currently supported formats:
 
+  + `"jpeg"`, `"jpg"` - Joint Photographic Experts Group format
+  + `"gif"` - Graphics Interchange Format
   + `"png"` - Portable Network Graphics format
   + `"canvas"` - A canvas element
 
