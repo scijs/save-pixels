@@ -7,48 +7,47 @@ var getPixels = require("get-pixels")
 var fs = require("fs")
 var tap = require("tape")
 
-function writePixels(t, array, format, cb) {
-  var out = fs.createWriteStream("temp." + format)
-  var pxstream = savePixels(array, format)
+function writePixels(t, array, filepath, format, options, cb) {
+  var out = fs.createWriteStream(filepath)
+  var pxstream = savePixels(array, format, options)
   pxstream.pipe(out)
   .on("error", cb)
   .on("close", cb)
 }
 
-function compareImages(t, array, format, cb) {
-  writePixels(t, array, format, function(err) {
-    if (err) {
+function compareImages(t, actualFilepath, expectedFilepath, deepEqual, cb) {
+  getPixels(actualFilepath, function(err, actualPixels) {
+    if(err) {
       t.assert(false, err)
       cb()
       return
     }
 
-    getPixels("temp." + format, function(err, actualPixels) {
+    getPixels(expectedFilepath, function(err, expectedPixels) {
       if(err) {
         t.assert(false, err)
         cb()
         return
       }
 
-      getPixels("expected." + format, function(err, expectedPixels) {
-        if(err) {
-          t.assert(false, err)
-          cb()
-          return
-        }
-
+      if (deepEqual) {
         t.deepEqual(actualPixels, expectedPixels)
-        if (!process.env.TEST_DEBUG) {
-          fs.unlinkSync("temp." + format)
-        }
-        cb()
-      })
+      } else {
+        t.notDeepEqual(actualPixels, expectedPixels)
+      }
+      cb()
     })
   })
 }
+function assertImagesEqual(t, actualFilepath, expectedFilepath, cb) {
+  compareImages(t, actualFilepath, expectedFilepath, true, cb)
+}
+function assertImagesNotEqual(t, actualFilepath, expectedFilepath, cb) {
+  compareImages(t, actualFilepath, expectedFilepath, false, cb)
+}
 
-function testArray(t, array, format, cb) {
-  writePixels(t, array, format, function(err) {
+function testArray(t, array, filepath, format, cb) {
+  writePixels(t, array, filepath, format, null, function(err) {
     if (err) {
       t.assert(false, err)
       cb()
@@ -56,7 +55,7 @@ function testArray(t, array, format, cb) {
     }
 
     process.nextTick(function() {
-      getPixels("temp." + format, function(err, data) {
+      getPixels(filepath, function(err, data) {
         if(err) {
           t.assert(false, err)
           cb()
@@ -104,7 +103,7 @@ function testArray(t, array, format, cb) {
           }
         }
         if (!process.env.TEST_DEBUG) {
-          fs.unlinkSync("temp." + format)
+          fs.unlinkSync(filepath)
         }
         cb()
       })
@@ -121,7 +120,7 @@ tap("save-pixels saving a monoscale png", function(t) {
       x.set(i, j, i+2*j)
     }
   }
-  testArray(t, x, "png", function() {
+  testArray(t, x, "temp.png", "png", function() {
     t.end()
   })
 })
@@ -136,14 +135,16 @@ tap("save-pixels saving a RGB png", function(t) {
       x.set(i, j, 2, i+2*j)
     }
   }
-  testArray(t, x, "png", function() {
+  testArray(t, x, "temp.png", "png", function() {
     t.end()
   })
 })
 
 tap("save-pixels saving a RGB jpeg", function(t) {
   var x = zeros([64, 64, 3])
-  
+  var actualFilepath = "temp.jpeg"
+  var expectedFilepath = "expected.jpeg"
+
   for(var i=0; i<64; ++i) {
     for(var j=0; j<64; ++j) {
       x.set(i, j, 0, i)
@@ -151,8 +152,20 @@ tap("save-pixels saving a RGB jpeg", function(t) {
       x.set(i, j, 0, i+2*j)
     }
   }
-  compareImages(t, x, "jpeg", function() {
-    t.end()
+  writePixels(t, x, actualFilepath, "jpeg", null, function(err) {
+    if(err) {
+      t.assert(false, err)
+      t.end()
+      return
+    }
+
+    assertImagesEqual(t, actualFilepath, expectedFilepath, function() {
+      if (!process.env.TEST_DEBUG) {
+        fs.unlinkSync(actualFilepath)
+      }
+
+      t.end()
+    })
   })
 })
 
@@ -179,7 +192,7 @@ tap("save-pixels saving an unanimated gif", function(t) {
       x.set(i+32, j+32, 3, 255)
     }
   }
-  testArray(t, x, "gif", function() {
+  testArray(t, x, "temp.gif", "gif", function() {
     t.end()
   })
 })
@@ -224,7 +237,87 @@ tap("save-pixels saving an animated gif", function(t) {
       x.set(1, i+32, j+32, 3, 255)
     }
   }
-  testArray(t, x, "gif", function() {
+  testArray(t, x, "temp.gif", "gif", function() {
     t.end()
+  })
+})
+
+tap("save-pixels saving 2 jpeg images with the same quality are identical", function(t) {
+  var x = zeros([64, 64, 3])
+  var firstFilepath = "temp1.jpeg"
+  var secondFilepath = "temp2.jpeg"
+
+  for(var i=0; i<64; ++i) {
+    for(var j=0; j<64; ++j) {
+      // 1x1 black and white checkerboard pattern
+      var value = (i % 2 === 0 && j % 2 === 0) ? 255 : 0
+      x.set(i, j, 0, value)
+      x.set(i, j, 1, value)
+      x.set(i, j, 2, value)
+    }
+  }
+  writePixels(t, x, firstFilepath, "jpeg", {quality: 20}, function(err) {
+    if(err) {
+      t.assert(false, err)
+      t.end()
+      return
+    }
+
+    writePixels(t, x, secondFilepath, "jpeg", {quality: 20}, function(err) {
+      if(err) {
+        t.assert(false, err)
+        t.end()
+        return
+      }
+
+      assertImagesEqual(t, firstFilepath, secondFilepath, function() {
+        if (!process.env.TEST_DEBUG) {
+          fs.unlinkSync(firstFilepath)
+          fs.unlinkSync(secondFilepath)
+        }
+
+        t.end()
+      })
+    })
+  })
+})
+
+tap("save-pixels saving 2 jpeg images with the different qualities are different", function(t) {
+  var x = zeros([64, 64, 3])
+  var lowQualityFilepath = "temp-low.jpeg"
+  var highQualityFilepath = "temp-high.jpeg"
+
+  for(var i=0; i<64; ++i) {
+    for(var j=0; j<64; ++j) {
+      // 1x1 black and white checkerboard pattern
+      var value = (i % 2 === 0 && j % 2 === 0) ? 255 : 0
+      x.set(i, j, 0, value)
+      x.set(i, j, 1, value)
+      x.set(i, j, 2, value)
+    }
+  }
+  writePixels(t, x, lowQualityFilepath, "jpeg", {quality: 1}, function(err) {
+    if(err) {
+      t.assert(false, err)
+      t.end()
+      return
+    }
+
+    writePixels(t, x, highQualityFilepath, "jpeg", {quality: 100}, function(err) {
+      if(err) {
+        t.assert(false, err)
+        t.end()
+        return
+      }
+
+      assertImagesNotEqual(t, lowQualityFilepath, highQualityFilepath, function() {
+        if (!process.env.TEST_DEBUG) {
+          fs.unlinkSync(lowQualityFilepath)
+          fs.unlinkSync(highQualityFilepath)
+        }
+
+        t.end()
+      })
+    })
   })
 })
