@@ -25,7 +25,7 @@ Install
 
     npm install save-pixels
 
-### `require("save-pixels")(array, type)`
+### `require("save-pixels")(array, type[, options])`
 Saves an ndarray as an image with the given format
 
 * `array` is an `ndarray` of pixels.  Assumes that shape is `[width, height, channels]`
@@ -36,6 +36,12 @@ Saves an ndarray as an image with the given format
   + `"png"` - Portable Network Graphics format
   + `"canvas"` - A canvas element
 
+* `options` is an object that alters saving behavior
+
+  + `quality` is the `Number` to use for saved image quality
+
+    + This can only be used with a `"jpeg"` image
+    + It range between 1 (low quality) and 100 (high quality) inclusively
 
 **Returns** A stream that you can pipe to serialize the result.
 
