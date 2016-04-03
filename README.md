@@ -43,7 +43,7 @@ Saves an ndarray as an image with the given format
     + This can only be used with a `"jpeg"` image
     + It range between 1 (low quality) and 100 (high quality) inclusively
 
-**Returns** A stream that you can pipe to serialize the result.
+**Returns** A stream that you can pipe to serialize the result, or a canvas element if the `type` is `"canvas"`.
 
 # Credits
 (c) 2013 Mikola Lysenko. MIT License
