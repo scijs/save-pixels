@@ -4,61 +4,66 @@ var ContentStream = require('contentstream')
 var GifEncoder = require('gif-encoder')
 var jpegJs = require('jpeg-js')
 var PNG = require('pngjs').PNG
+var ndarray = require('ndarray')
+var ops = require('ndarray-ops')
 var through = require('through')
 
 function handleData (array, data, frame) {
   var i, j, ptr = 0, c
   if (array.shape.length === 4) {
-    for (j = 0; j < array.shape[2]; ++j) {
-      for (i = 0; i < array.shape[1]; ++i) {
-        data[ptr++] = array.get(frame, i, j, 0) >>> 0
-        data[ptr++] = array.get(frame, i, j, 1) >>> 0
-        data[ptr++] = array.get(frame, i, j, 2) >>> 0
-        data[ptr++] = array.get(frame, i, j, 3) >>> 0
-      }
-    }
+    return handleData(array.pick(frame), data, 0)
   } else if (array.shape.length === 3) {
     if (array.shape[2] === 3) {
-      for (j = 0; j < array.shape[1]; ++j) {
-        for (i = 0; i < array.shape[0]; ++i) {
-          data[ptr++] = array.get(i, j, 0) >>> 0
-          data[ptr++] = array.get(i, j, 1) >>> 0
-          data[ptr++] = array.get(i, j, 2) >>> 0
-          data[ptr++] = 255
-        }
-      }
+      ops.assign(
+        ndarray(data,
+          [array.shape[0], array.shape[1], 3],
+          [4, 4 * array.shape[0], 1]),
+        array)
+      ops.assigns(
+        ndarray(data,
+          [array.shape[0] * array.shape[1]],
+          [4],
+          3),
+        255)
     } else if (array.shape[2] === 4) {
-      for (j = 0; j < array.shape[1]; ++j) {
-        for (i = 0; i < array.shape[0]; ++i) {
-          data[ptr++] = array.get(i, j, 0) >>> 0
-          data[ptr++] = array.get(i, j, 1) >>> 0
-          data[ptr++] = array.get(i, j, 2) >>> 0
-          data[ptr++] = array.get(i, j, 3) >>> 0
-        }
-      }
+      ops.assign(
+        ndarray(data,
+          [array.shape[0], array.shape[1], 4],
+          [4, array.shape[0] * 4, 1]),
+        array)
     } else if (array.shape[2] === 1) {
-      for (j = 0; j < array.shape[1]; ++j) {
-        for (i = 0; i < array.shape[0]; ++i) {
-          var c = array.get(i, j, 0) >>> 0
-          data[ptr++] = c
-          data[ptr++] = c
-          data[ptr++] = c
-          data[ptr++] = 255
-        }
-      }
+      ops.assign(
+        ndarray(data,
+          [array.shape[0], array.shape[1], 3],
+          [4, 4 * array.shape[0], 0]),
+        ndarray(array.data,
+          [array.shape[0], array.shape[1], 3],
+          [array.stride[0], array.stride[1], 0],
+          array.offset))
+      ops.assigns(
+        ndarray(data,
+          [array.shape[0] * array.shape[1]],
+          [4],
+          3),
+        255)
     } else {
       return new Error('Incompatible array shape')
     }
   } else if (array.shape.length === 2) {
-    for (j = 0; j < array.shape[1]; ++j) {
-      for (i = 0; i < array.shape[0]; ++i) {
-        var c = array.get(i, j, 0) >>> 0
-        data[ptr++] = c
-        data[ptr++] = c
-        data[ptr++] = c
-        data[ptr++] = 255
-      }
-    }
+    ops.assign(
+      ndarray(data,
+        [array.shape[0], array.shape[1], 3],
+        [4, 4 * array.shape[0], 0]),
+      ndarray(array.data,
+        [array.shape[0], array.shape[1], 3],
+        [array.stride[0], array.stride[1], 0],
+        array.offset))
+    ops.assigns(
+      ndarray(data,
+        [array.shape[0] * array.shape[1]],
+        [4],
+        3),
+      255)
   } else {
     return new Error('Incompatible array shape')
   }
