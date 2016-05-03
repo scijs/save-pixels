@@ -36,7 +36,7 @@ function handleData (array, data, frame) {
           data[ptr++] = array.get(i, j, 3) >>> 0
         }
       }
-    } else if (array.shape[3] === 1) {
+    } else if (array.shape[2] === 1) {
       for (j = 0; j < array.shape[1]; ++j) {
         for (i = 0; i < array.shape[0]; ++i) {
           var c = array.get(i, j, 0) >>> 0
