@@ -35,7 +35,7 @@ function handleData (array, data, frame) {
       ops.assign(
         ndarray(data,
           [array.shape[0], array.shape[1], 3],
-          [4, 4 * array.shape[0], 0]),
+          [4, 4 * array.shape[0], 1]),
         ndarray(array.data,
           [array.shape[0], array.shape[1], 3],
           [array.stride[0], array.stride[1], 0],
@@ -53,7 +53,7 @@ function handleData (array, data, frame) {
     ops.assign(
       ndarray(data,
         [array.shape[0], array.shape[1], 3],
-        [4, 4 * array.shape[0], 0]),
+        [4, 4 * array.shape[0], 1]),
       ndarray(array.data,
         [array.shape[0], array.shape[1], 3],
         [array.stride[0], array.stride[1], 0],
