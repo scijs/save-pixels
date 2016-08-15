@@ -143,7 +143,7 @@ tap("save-pixels saving a RGB png", function(t) {
 tap("save-pixels saving a RGB jpeg", function(t) {
   var x = zeros([64, 64, 3])
   var actualFilepath = "temp.jpeg"
-  var expectedFilepath = "expected.jpeg"
+  var expectedFilepath = "test/expected.jpeg"
 
   for(var i=0; i<64; ++i) {
     for(var j=0; j<64; ++j) {
