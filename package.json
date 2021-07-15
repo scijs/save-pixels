@@ -19,8 +19,8 @@
   "devDependencies": {
     "get-pixels": "^3.0.1",
     "ndarray-scratch": "^1.1.1",
-    "tap": "^10.7.0",
-    "tape": "^3.0.1"
+    "tap": "^12.7.0",
+    "tape": "^5.2.2"
   },
   "scripts": {
     "test": "tap test/*.js"
