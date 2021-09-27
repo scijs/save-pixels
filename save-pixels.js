@@ -116,7 +116,8 @@ module.exports = function savePixels (array, type, options) {
     case '.PNG':
       var png = new PNG({
         width: array.shape[0],
-        height: array.shape[1]
+        height: array.shape[1],
+        ...options.png
       })
       var data = handleData(array, png.data)
       if (typeof data === 'Error') return haderror(data)
