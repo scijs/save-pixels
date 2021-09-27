@@ -321,3 +321,86 @@ tap("save-pixels saving 2 jpeg images with the different qualities are different
     })
   })
 })
+
+
+tap("save-pixels saving 2 png images with the same colorType are identical", function(t) {
+  var x = zeros([64, 64, 4]) // RGBA
+  var firstFilepath = "temp1.png"
+  var secondFilepath = "temp2.png"
+
+  for(var i=0; i<64; ++i) {
+    for(var j=0; j<64; ++j) {
+      // 1x1 black and white checkerboard pattern
+      var value = (i % 2 === 0 && j % 2 === 0) ? 255 : 0
+      x.set(i, j, 0, value)
+      x.set(i, j, 1, value)
+      x.set(i, j, 2, value)
+      x.set(i, j, 3, 255)
+    }
+  }
+  writePixels(t, x, firstFilepath, "png", {png: { colorType: 6 } }, function(err) {
+    if(err) {
+      t.assert(false, err)
+      t.end()
+      return
+    }
+
+    writePixels(t, x, secondFilepath, "png", {png: { colorType: 6 } }, function(err) {
+      if(err) {
+        t.assert(false, err)
+        t.end()
+        return
+      }
+
+      assertImagesEqual(t, firstFilepath, secondFilepath, function() {
+        if (!process.env.TEST_DEBUG) {
+          fs.unlinkSync(firstFilepath)
+          fs.unlinkSync(secondFilepath)
+        }
+
+        t.end()
+      })
+    })
+  })
+})
+
+tap("save-pixels saving 2 png images with the different colorType are different", function(t) {
+  var x = zeros([64, 64, 4]) // RGBA
+  var withoutAlphaFilepath = "temp-rgb.png"
+  var withAlphaFilepath = "temp-rgba.png"
+
+  for(var i=0; i<64; ++i) {
+    for(var j=0; j<64; ++j) {
+      // 1x1 black and white checkerboard pattern
+      var value = (i % 2 === 0 && j % 2 === 0) ? 255 : 0
+      x.set(i, j, 0, value)
+      x.set(i, j, 1, value)
+      x.set(i, j, 2, value)
+      x.set(i, j, 3, 0)
+    }
+  }
+  writePixels(t, x, withoutAlphaFilepath, "png", {png: { colorType: 2 } }, function(err) {
+    if(err) {
+      t.assert(false, err)
+      t.end()
+      return
+    }
+
+    writePixels(t, x, withAlphaFilepath, "png", {png: { colorType: 6 } }, function(err) {
+      if(err) {
+        t.assert(false, err)
+        t.end()
+        return
+      }
+
+      assertImagesNotEqual(t, withoutAlphaFilepath, withAlphaFilepath, function() {
+        if (!process.env.TEST_DEBUG) {
+          fs.unlinkSync(withoutAlphaFilepath)
+          fs.unlinkSync(withAlphaFilepath)
+        }
+
+        t.end()
+      })
+    })
+  })
+})
