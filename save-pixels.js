@@ -124,10 +124,8 @@ module.exports = function savePixels (array, type, options) {
       return png.pack()
 
     case 'CANVAS':
-      var canvas = document.createElement('canvas')
+      var canvas = createCanvas(array.shape[0], array.shape[1]);
       var context = canvas.getContext('2d')
-      canvas.width = array.shape[0]
-      canvas.height = array.shape[1]
       var imageData = context.getImageData(0, 0, canvas.width, canvas.height)
       var data = imageData.data
       data = handleData(array, data)
