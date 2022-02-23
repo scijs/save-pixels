@@ -8,6 +8,7 @@
     "test": "test"
   },
   "dependencies": {
+    "canvas": "^2.9.0",
     "contentstream": "^1.0.0",
     "gif-encoder": "~0.4.1",
     "jpeg-js": "^0.4.3",
