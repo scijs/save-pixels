@@ -7,6 +7,7 @@ var PNG = require('pngjs-nozlib').PNG
 var ndarray = require('ndarray')
 var ops = require('ndarray-ops')
 var through = require('through')
+var createCanvas = require('canvas').createCanvas
 
 function handleData (array, data, frame) {
   var i, j, ptr = 0, c
