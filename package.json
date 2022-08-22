@@ -14,7 +14,8 @@
     "ndarray": "^1.0.18",
     "ndarray-ops": "^1.2.2",
     "pngjs-nozlib": "^1.0.0",
-    "through": "^2.3.4"
+    "through": "^2.3.4",
+    "canvas": "^2.5.0"
   },
   "devDependencies": {
     "get-pixels": "^3.0.1",
