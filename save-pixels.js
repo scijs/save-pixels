@@ -87,7 +87,7 @@ module.exports = function savePixels (array, type, options) {
     case '.JPE':
       var width = array.shape[0]
       var height = array.shape[1]
-      var data = new Buffer(width * height * 4)
+      var data = Buffer.alloc(width * height * 4)
       data = handleData(array, data)
       var rawImageData = {
         data: data,
